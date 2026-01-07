@@ -64,7 +64,8 @@ async function ensureDailyCheckinsTable() {
 }
 
 function isMissingTable(error: any) {
-    return error.message?.includes('does not exist') || error.code === '42P01'
+    const check = (e: any) => e?.message?.includes('does not exist') || e?.code === '42P01'
+    return check(error) || (error?.cause && check(error.cause))
 }
 
 export async function getUserPoints() {
