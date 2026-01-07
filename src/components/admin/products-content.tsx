@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -57,11 +57,9 @@ export function AdminProductsContent({ products, stats, shopName, visitorCount, 
     const [enabledCheckin, setEnabledCheckin] = useState(checkinEnabled)
     const [savingEnabled, setSavingEnabled] = useState(false)
 
-    // Memo
-    const lowStockCount = useMemo(() => {
-        const threshold = Number.parseInt(thresholdValue, 10) || 5
-        return (products || []).filter(p => p.stockCount <= threshold).length
-    }, [products, thresholdValue])
+    // Derived state directly to avoid Hook complexity/errors
+    const threshold = Number.parseInt(thresholdValue, 10) || 5
+    const lowStockCount = (products || []).filter(p => p.stockCount <= threshold).length
 
     const handleDelete = async (id: string) => {
         if (!confirm(t('admin.products.confirmDelete'))) return
@@ -423,6 +421,6 @@ export function AdminProductsContent({ products, stats, shopName, visitorCount, 
                     </TableBody>
                 </Table>
             </div>
-        </div >
+        </div>
     )
 }
